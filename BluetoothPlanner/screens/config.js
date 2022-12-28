@@ -1,5 +1,5 @@
-import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import { initializeApp } from 'firebase/app';
+import { getFirestore } from 'firebase/firestore/lite';
 
 const firebaseConfig = {
   apiKey: "AIzaSyAA2hNaxiRLYMnlWRY0A88rH_X3l0PFyls",
@@ -11,8 +11,10 @@ const firebaseConfig = {
   measurementId: "G-6WDQ0L9HGF"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+
+// Get a list of cities from your database
+
 
 export {db};

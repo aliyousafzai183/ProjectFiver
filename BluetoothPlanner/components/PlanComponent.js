@@ -5,7 +5,7 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import styles from '../styles/planComponentStyle';
 
 // plan component
-const plan = ({ no, start, end, del ,plan, index}) => {
+const plan = ({ no, start, end, del}) => {
 
    
 

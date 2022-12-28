@@ -1,79 +1,113 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, SafeAreaView, FlatList } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, TouchableOpacity, SafeAreaView, FlatList,ActivityIndicator } from 'react-native';
 
-// db
-import {db} from './config';
-import { collection, getDocs,addDoc } from 'firebase/firestore';
-import {async} from '@firebase/util';
+// db file
+import { collection, getDocs } from 'firebase/firestore/lite';
+import { db } from './config';
 
 // Importing style
 import styles from "../styles/mainPageStyle";
 
 // importing component
 import Plan from '../components/PlanComponent';
+import { ScrollView } from 'react-native-gesture-handler';
+import { Value } from 'react-native-reanimated';
 
-const MainScreen = ({ navigation, plan }) => {
-    const [value,setValue] = useState([]);
-    
-    const fetchData = async() =>{
-        const data = [];
+const MainScreen = ({ navigation }) => {
+    // const [value, setValue] = useState([]);
+    const [loading, setLoading] = useState(true);
+    let data=[];
+
+    useEffect(() => {
         try {
-            const rep = await getDocs(collection(db,'plans'));
-            rep.forEach(doc=>{
-                data.push(doc.data());
-            })
+            async function fetchData() {
+                const plansCol = collection(db, 'plans');
+                const plansSnapshot = await getDocs(plansCol);
+                const plansList = plansSnapshot.docs.map(doc => doc.data());
+                data = plansList;
+                console.log(plansList);
+                console.log(data);
+                data.forEach(element => {
+                    console.log(element.startingon + " === " + element.endingon);
+                });
+                setLoading(false);
+                return plansList;
+            }
 
-            setValue(data);
-
-            console.log(data);
-            navigation.navigate('planPage')
-        } catch (e) {
-            console.log(e);
+            fetchData();
+        } catch (error) {
+            console.log(error);
         }
+    }, [])
+
+    if (loading) {
+        return (
+            <View style={{
+                height:700,
+                marginTop:300
+            }}>
+                <ActivityIndicator />
+            </View>
+        )
+    }else{
+        return (
+
+            <SafeAreaView style={styles.wrapper}>
+                <View style={styles.wrapper1}>
+                    <Text style={styles.heading1}>Bluetooth</Text>
+                    <Text style={styles.heading1}>Planner</Text>
+                </View>
+    
+                <View style={styles.wrapper2}>
+                    <Plan no="#" start="Start Time" end="End Time" del="Cancel" />
+    
+                    {/* <FlatList
+                        style={{
+                            paddingTop: 3,
+                            paddingLeft: 2,
+                            paddingRight: 10
+                        }}
+                        data={data}
+                        renderItem={({ item }) => (
+                            <Plan start={item.startingon} end={item.endingon} del="X" />
+                        )}
+                        keyExtractor={(item) => item.id.toString()}
+                    /> */}
+    
+                    <ScrollView
+                        style={{
+                            paddingTop: 3,
+                            paddingLeft: 2,
+                            paddingRight: 10
+                        }}>
+                        {
+                            data.forEach(item => {
+                                <Plan start={item.startingon} end={item.endingon} del="X" />
+                            })
+                        }
+                    </ScrollView>
+    
+                </View>
+    
+                <View style={styles.wrapper3}>
+                    <TouchableOpacity style={{
+                        height: '38%',
+                        backgroundColor: '#436AC8',
+                        borderWidth: 1,
+                        borderColor: '#295740',
+                        padding: 10
+                    }}
+                        onPress={() => navigation.navigate('planPage')}
+    
+                    ><Text style={styles.button}>+</Text></TouchableOpacity>
+                </View>
+    
+            </SafeAreaView>
+        )
     }
-    return (
-        <SafeAreaView style={styles.wrapper}>
 
-            <View style={styles.wrapper1}>
-                <Text style={styles.heading1}>Bluetooth</Text>
-                <Text style={styles.heading1}>Planner</Text>
-            </View>
 
-            <View style={styles.wrapper2}>
-                <Plan no="#" start="Start Time" end="End Time" del="Cancel" />
-
-                <FlatList
-                    style={{
-                        paddingTop: 3,
-                        paddingLeft: 2,
-                        paddingRight: 10
-                    }}
-                    data={value}
-                    keyExtractor={item => {
-                        return item.id;
-                    }}
-                    renderItem={
-                        ({ item, index }) => <Plan key={item.id} no={index + 1} start={item.start} end={item.stop} del="X" plan={plan} index={index} />
-                    }
-                />
-                
-            </View>
-
-            <View style={styles.wrapper3}>
-                <TouchableOpacity style={{
-                    height: '38%',
-                    backgroundColor: '#436AC8',
-                    borderWidth: 1,
-                    borderColor: '#295740',
-                    padding: 10
-                }}
-                    onPress={fetchData}
-
-                ><Text style={styles.button}>+</Text></TouchableOpacity>
-            </View>
-
-        </SafeAreaView>
-    )
+    
 }
 
 export default MainScreen;

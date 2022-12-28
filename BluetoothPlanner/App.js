@@ -1,48 +1,46 @@
 import * as React from 'react';
+import { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 // importing Screens
 import PlanPage from './screens/planPage';
 import MainPage from './screens/mainPage';
+// import SplashPage from './screens/splashPage';
 
-// Main Screen
-const plan = [
-  {
-      'no': 1,
-      'start': '2:30 AM',
-      'stop': '9:30 PM',
-      'monday': false,
-      'tuesday': false,
-      'wednesday': false,
-      'thursday': false,
-      'friday': false,
-      'saturday': false,
-      'sunday': false,
-  },
-
-];
+// const splashScreen = ({ navigation}) => {
+//   return (
+//     <SplashPage navigation={navigation}/>
+//   )
+// }
 
 const MainScreen = ({ navigation}) => {
   return (
-    <MainPage navigation={navigation} plan={plan}/>
+    <MainPage navigation={navigation}/>
   )
 }
 
 // AddPlan Screen
-const AddPlanScreen = ({ navigation ,plan}) => {
+const AddPlanScreen = ({ navigation}) => {
 
   return (
-    <PlanPage navigation={navigation} plan={plan}/>
+    <PlanPage navigation={navigation}/>
   )
 }
 
 // Navigation Screen
 const Stack = createNativeStackNavigator();
+
 function App() {
+
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName='main'>
+      {/* <Stack.Screen
+          name="splash"
+          component={SplashPage}
+          options={{ headerShown: false }}
+        /> */}
         <Stack.Screen
           name="main"
           component={MainScreen}

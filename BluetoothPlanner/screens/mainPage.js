@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, SafeAreaView, FlatList,ActivityIndicator } from 'react-native';
+import { View, Text, ImageBackground, TouchableOpacity, SafeAreaView } from 'react-native';
 
 // db file
 import { collection, getDocs } from 'firebase/firestore/lite';
@@ -7,29 +7,34 @@ import { db } from './config';
 
 // Importing style
 import styles from "../styles/mainPageStyle";
+import styles1 from '../styles/planComponentStyle';
 
 // importing component
-import Plan from '../components/PlanComponent';
+// import Plan from '../components/PlanComponent';
 import { ScrollView } from 'react-native-gesture-handler';
-import { Value } from 'react-native-reanimated';
+import Plan from '../components/PlanComponent';
 
 const MainScreen = ({ navigation }) => {
-    // const [value, setValue] = useState([]);
+
+    const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
-    let data=[];
+    const [load, setload] = useState(false);
+
 
     useEffect(() => {
         try {
             async function fetchData() {
                 const plansCol = collection(db, 'plans');
                 const plansSnapshot = await getDocs(plansCol);
-                const plansList = plansSnapshot.docs.map(doc => doc.data());
-                data = plansList;
+                const plansList = plansSnapshot.docs.map(
+                    (doc) => {
+                        const data = doc.data()
+                        return { id: doc.id, ...data };
+                    }
+                );
+                setData(plansList);
                 console.log(plansList);
                 console.log(data);
-                data.forEach(element => {
-                    console.log(element.startingon + " === " + element.endingon);
-                });
                 setLoading(false);
                 return plansList;
             }
@@ -38,18 +43,17 @@ const MainScreen = ({ navigation }) => {
         } catch (error) {
             console.log(error);
         }
-    }, [])
+    }, [load])
 
     if (loading) {
         return (
-            <View style={{
-                height:700,
-                marginTop:300
-            }}>
-                <ActivityIndicator />
-            </View>
+            <ImageBackground
+                source={require('../icons/splash.png')}
+                style={{ width: '100%', height: '100%' }}
+            >
+            </ImageBackground>
         )
-    }else{
+    } else {
         return (
 
             <SafeAreaView style={styles.wrapper}>
@@ -57,23 +61,25 @@ const MainScreen = ({ navigation }) => {
                     <Text style={styles.heading1}>Bluetooth</Text>
                     <Text style={styles.heading1}>Planner</Text>
                 </View>
-    
+
                 <View style={styles.wrapper2}>
-                    <Plan no="#" start="Start Time" end="End Time" del="Cancel" />
-    
-                    {/* <FlatList
-                        style={{
-                            paddingTop: 3,
-                            paddingLeft: 2,
-                            paddingRight: 10
-                        }}
-                        data={data}
-                        renderItem={({ item }) => (
-                            <Plan start={item.startingon} end={item.endingon} del="X" />
-                        )}
-                        keyExtractor={(item) => item.id.toString()}
-                    /> */}
-    
+                    <View style={styles1.mainWrapper} >
+
+                        <View style={styles1.wrapper1}>
+                            <Text style={styles1.list}>#</Text>
+                        </View>
+                        <View style={styles1.wrapper2}>
+                            <Text style={styles1.list}>Start-Time</Text>
+                        </View>
+                        <View style={styles1.wrapper3}>
+                            <Text style={styles1.list}>End-Time</Text>
+                        </View>
+
+                        <View style={styles1.wrapper4}>
+                            <Text style={styles1.list}>Del</Text>
+                        </View>
+
+                    </View>
                     <ScrollView
                         style={{
                             paddingTop: 3,
@@ -81,14 +87,16 @@ const MainScreen = ({ navigation }) => {
                             paddingRight: 10
                         }}>
                         {
-                            data.forEach(item => {
-                                <Plan start={item.startingon} end={item.endingon} del="X" />
-                            })
+                            data?.map((item => {
+                                return (
+                                    <Plan data={item} key={item.id} setload={setload} />
+                                )
+                            }))
                         }
                     </ScrollView>
-    
+
                 </View>
-    
+
                 <View style={styles.wrapper3}>
                     <TouchableOpacity style={{
                         height: '38%',
@@ -98,16 +106,16 @@ const MainScreen = ({ navigation }) => {
                         padding: 10
                     }}
                         onPress={() => navigation.navigate('planPage')}
-    
+
                     ><Text style={styles.button}>+</Text></TouchableOpacity>
                 </View>
-    
+
             </SafeAreaView>
         )
     }
 
 
-    
+
 }
 
 export default MainScreen;

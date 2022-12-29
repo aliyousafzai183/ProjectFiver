@@ -8,6 +8,10 @@ import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import styles1 from '../styles/planPageStyle';
 import styles from "../styles/mainPageStyle";
 
+// db file
+import { doc, addDoc, collection } from 'firebase/firestore/lite';
+import { db } from './config';
+
 // for checkboxes
 const initialState = {
   monday: false,
@@ -24,49 +28,61 @@ const planpage = ({ navigation }) => {
   // Code for reading start time and end time
   const [dateStart, setDateStart] = useState(new Date(1598051730000));
   const [dateEnd, setDateEnd] = useState(new Date(1598051730000));
+
   // saved days
-  const [value, setValue] = useState(initialState);
+  const [days, setDays] = useState(initialState);
 
   let one = false;
   let two = false;
 
-  const addPlans = async () => {
+  // save plan to db
+  const addPlan = async () => {
+    if (one && two) {
+      // code to add in db
+      try {
+        const docRef = await addDoc(collection(db, "plans"), {
+          start: dateStart,
+          end: dateEnd,
+          monday: days.monday,
+          tuesday: days.tuesday,
+          wednesday: days.wednesday,
+          thursday: days.thursday,
+          friday: days.friday,
+          saturday: days.saturday,
+          sunday: days.sunday,
+        });
+        console.log("Document written with ID: ", docRef.id);
+        navigation.navigate('main');
+      } catch (error) {
+        console.log(error);
+      }
+
+    } else if (!one && two) {
+      Alert.alert(
+        "Set Time-On",
+        "Please set time on when to turn on the bluetooth automatically.",
+        [
+          { text: "OK" }
+        ]
+      );
+    } else if (one && !two) {
+      Alert.alert(
+        "Set Time-Off",
+        "Please set time off when to turn off the bluetooth automatically.",
+        [
+          { text: "OK" }
+        ]
+      );
+    } else {
+      Alert.alert(
+        "Set Time On/Off",
+        "Please set time off and on when to turn on and off the bluetooth automatically.",
+        [
+          { text: "OK" }
+        ]
+      );
+    }
   }
-
-  // // save plan to db
-  // const savePlan = () => {
-  //   if (one && two) {
-
-  //        // code to add in db
-
-
-
-  //   } else if (!one && two) {
-  //     Alert.alert(
-  //       "Set Time-On",
-  //       "Please set time on when to turn on the bluetooth automatically.",
-  //       [
-  //         { text: "OK" }
-  //       ]
-  //     );
-  //   } else if (one && !two) {
-  //     Alert.alert(
-  //       "Set Time-Off",
-  //       "Please set time off when to turn off the bluetooth automatically.",
-  //       [
-  //         { text: "OK" }
-  //       ]
-  //     );
-  //   } else {
-  //     Alert.alert(
-  //       "Set Time On/Off",
-  //       "Please set time off and on when to turn on and off the bluetooth automatically.",
-  //       [
-  //         { text: "OK" }
-  //       ]
-  //     );
-  //   }
-  // }
 
   const timeStart = dateStart.toLocaleString([], {
     hour: 'numeric',
@@ -131,10 +147,10 @@ const planpage = ({ navigation }) => {
         <View style={styles1.checkBoxMainWrapper}>
           <View style={styles1.checkBoxWrapper}>
             <CheckBox
-              value={value.monday}
+              value={days.monday}
               onValueChange={value1 =>
-                setValue({
-                  ...value,
+                setDays({
+                  ...days,
                   monday: value1,
                 })
               }
@@ -144,10 +160,10 @@ const planpage = ({ navigation }) => {
 
           <View style={styles1.checkBoxWrapper}>
             <CheckBox
-              value={value.tuesday}
+              value={days.tuesday}
               onValueChange={value1 =>
-                setValue({
-                  ...value,
+                setDays({
+                  ...days,
                   tuesday: value1,
                 })
               }
@@ -157,10 +173,10 @@ const planpage = ({ navigation }) => {
 
           <View style={styles1.checkBoxWrapper}>
             <CheckBox
-              value={value.wednesday}
+              value={days.wednesday}
               onValueChange={value1 =>
-                setValue({
-                  ...value,
+                setDays({
+                  ...days,
                   wednesday: value1,
                 })
               }
@@ -170,10 +186,10 @@ const planpage = ({ navigation }) => {
 
           <View style={styles1.checkBoxWrapper}>
             <CheckBox
-              value={value.thursday}
+              value={days.thursday}
               onValueChange={value1 =>
-                setValue({
-                  ...value,
+                setDays({
+                  ...days,
                   thursday: value1,
                 })
               }
@@ -183,10 +199,10 @@ const planpage = ({ navigation }) => {
 
           <View style={styles1.checkBoxWrapper}>
             <CheckBox
-              value={value.friday}
+              value={days.friday}
               onValueChange={value1 =>
-                setValue({
-                  ...value,
+                setDays({
+                  ...days,
                   friday: value1,
                 })
               }
@@ -196,10 +212,10 @@ const planpage = ({ navigation }) => {
 
           <View style={styles1.checkBoxWrapper}>
             <CheckBox
-              value={value.saturday}
+              value={days.saturday}
               onValueChange={value1 =>
-                setValue({
-                  ...value,
+                setDays({
+                  ...days,
                   saturday: value1,
                 })
               }
@@ -209,10 +225,10 @@ const planpage = ({ navigation }) => {
 
           <View style={styles1.checkBoxWrapper}>
             <CheckBox
-              value={value.sunday}
+              value={days.sunday}
               onValueChange={value1 =>
-                setValue({
-                  ...value,
+                setDays({
+                  ...days,
                   sunday: value1,
                 })
               }
@@ -263,7 +279,7 @@ const planpage = ({ navigation }) => {
             borderWidth: 1,
             borderColor: '#295740',
           }}
-          onPress={addPlans}
+          onPress={addPlan}
         >
           <Text style={styles1.heading1}>Save</Text>
         </TouchableOpacity>

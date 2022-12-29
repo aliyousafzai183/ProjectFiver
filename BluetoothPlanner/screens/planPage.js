@@ -2,15 +2,15 @@ import * as React from 'react-native';
 import { useState, useEffect } from 'react';
 import { Text, TouchableOpacity, KeyboardAvoidingView, View, Alert } from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
-import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
-
+// import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
+import DateTimePickerAndroid from 'react-native-date-picker';
 // importing styles from style
 import styles1 from '../styles/planPageStyle';
 import styles from "../styles/mainPageStyle";
 
 // db file
-import { doc, addDoc, collection } from 'firebase/firestore/lite';
-import { db } from './config';
+import { addDoc, collection } from 'firebase/firestore/lite';
+import { db } from '../firebase/config';
 
 // for checkboxes
 const initialState = {
@@ -26,18 +26,27 @@ const initialState = {
 const planpage = ({ navigation }) => {
 
   // Code for reading start time and end time
-  const [dateStart, setDateStart] = useState(new Date(1598051730000));
-  const [dateEnd, setDateEnd] = useState(new Date(1598051730000));
+  const [dateStart, setDateStart] = useState(new Date());
+  const [dateEnd, setDateEnd] = useState(new Date());
+
+  // code for opening and closing date time picker
+  const [openStart, setOpenStart] = useState(false);
+  const [openEnd, setOpenEnd] = useState(false);
 
   // saved days
   const [days, setDays] = useState(initialState);
+
+  // checks
+  const [check1, setCheck1] = useState(false);
+  const [check2, setCheck2] = useState(false);
+  const [check3, setCheck3] = useState(false);
 
   let one = false;
   let two = false;
 
   // save plan to db
   const addPlan = async () => {
-    if (one && two) {
+    if (check1 && check2) {
       // code to add in db
       try {
         const docRef = await addDoc(collection(db, "plans"), {
@@ -51,13 +60,15 @@ const planpage = ({ navigation }) => {
           saturday: days.saturday,
           sunday: days.sunday,
         });
-        console.log("Document written with ID: ", docRef.id);
         navigation.navigate('main');
+        setCheck1(false);
+        setCheck2(false);
+        setCheck3(false);
       } catch (error) {
         console.log(error);
       }
 
-    } else if (!one && two) {
+    } else if (!check1 && check2) {
       Alert.alert(
         "Set Time-On",
         "Please set time on when to turn on the bluetooth automatically.",
@@ -65,7 +76,7 @@ const planpage = ({ navigation }) => {
           { text: "OK" }
         ]
       );
-    } else if (one && !two) {
+    } else if (check1 && !check2) {
       Alert.alert(
         "Set Time-Off",
         "Please set time off when to turn off the bluetooth automatically.",
@@ -84,55 +95,19 @@ const planpage = ({ navigation }) => {
     }
   }
 
-  const timeStart = dateStart.toLocaleString([], {
-    hour: 'numeric',
-    minute: 'numeric',
-    hour12: true
-  });
+  const handleConfirm1 = (date) => {
+    setCheck1(true)
+    setDateStart(date)
+    setOpenStart(false)
+    const dateNow = new Date();
+  }
 
-  const timeEnd = dateEnd.toLocaleString([], {
-    hour: 'numeric',
-    minute: 'numeric',
-    hour12: true
-  });
-
-  const onChangeStart = (event, selectedDate) => {
-    const currentDate = selectedDate;
-    setDateStart(currentDate);
-  };
-
-  const onChangeEnd = (event, selectedDate) => {
-    const currentDate = selectedDate;
-    setDateEnd(currentDate);
-  };
-
-  const showModeStart = (currentMode) => {
-    DateTimePickerAndroid.open({
-      value: dateStart,
-      onChangeStart,
-      mode: currentMode,
-      is24Hour: true,
-    });
-    one = true;
-  };
-
-  const showModeEnd = (currentMode) => {
-    DateTimePickerAndroid.open({
-      value: dateStart,
-      onChangeEnd,
-      mode: currentMode,
-      is24Hour: true,
-    });
-    two = true;
-  };
-
-  const showTimepickerStart = () => {
-    showModeStart('time');
-  };
-
-  const showTimepickerEnd = () => {
-    showModeEnd('time');
-  };
+  const handleConfirm2 = (date) => {
+    setCheck2(true)
+    setDateEnd(date)
+    setOpenEnd(false)
+    const dateNow = new Date();
+  }
 
   return (
     <KeyboardAvoidingView style={styles.wrapper}>
@@ -248,11 +223,27 @@ const planpage = ({ navigation }) => {
             borderWidth: 1,
             borderColor: '#295740',
           }}
-          onPress={showTimepickerStart}
+          onPress={() => setOpenStart(true)}
         >
           <Text style={styles1.heading1}>Time on</Text>
-
         </TouchableOpacity>
+
+        <DateTimePickerAndroid
+          modal
+          open={openStart}
+          date={dateStart}
+          mode={'time'}
+          is24Hour={true}
+          onChange={(date) => {
+            console.log(date)
+            setDateStart(date);
+          }}
+          onConfirm={handleConfirm1}
+          onCancel={() => {
+            setOpenStart(false)
+          }}
+        />
+
       </View>
 
       <View style={styles1.wrapper2}>
@@ -264,10 +255,26 @@ const planpage = ({ navigation }) => {
             borderWidth: 1,
             borderColor: '#295740',
           }}
-          onPress={showTimepickerEnd}
+          onPress={() => setOpenEnd(true)}
         >
           <Text style={styles1.heading1}>Time off</Text>
         </TouchableOpacity>
+
+        <DateTimePickerAndroid
+          modal
+          open={openEnd}
+          date={dateEnd}
+          mode={'time'}
+          is24Hour={true}
+          onChange={(date) => {
+            console.log(date)
+            setDateEnd(date);
+          }}
+          onConfirm={handleConfirm2}
+          onCancel={() => {
+            setOpenEnd(false)
+          }}
+        />
       </View>
 
       <View style={styles1.wrapper2}>

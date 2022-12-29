@@ -1,18 +1,11 @@
 import * as React from 'react';
-import { useEffect } from 'react';
+import { useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 // importing Screens
 import PlanPage from './screens/planPage';
 import MainPage from './screens/mainPage';
-// import SplashPage from './screens/splashPage';
-
-// const splashScreen = ({ navigation}) => {
-//   return (
-//     <SplashPage navigation={navigation}/>
-//   )
-// }
 
 const MainScreen = ({ navigation}) => {
   return (
@@ -32,15 +25,9 @@ const AddPlanScreen = ({ navigation}) => {
 const Stack = createNativeStackNavigator();
 
 function App() {
-
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName='main'>
-      {/* <Stack.Screen
-          name="splash"
-          component={SplashPage}
-          options={{ headerShown: false }}
-        /> */}
         <Stack.Screen
           name="main"
           component={MainScreen}

@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { View, Text, ImageBackground, TouchableOpacity, SafeAreaView, RefreshControl,Alert } from 'react-native';
+import { View, Text, ImageBackground, TouchableOpacity, SafeAreaView, RefreshControl, Alert } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { useIsFocused } from '@react-navigation/native';
 
 // db file
 import { collection, getDocs } from 'firebase/firestore/lite';
@@ -14,13 +13,16 @@ import styles1 from '../styles/planComponentStyle';
 // importing component
 import Plan from '../components/PlanComponent';
 
+// bluetooth
+// import BluetoothStateManager from 'react-native-bluetooth-state-manager';
+// import {PERMISSIONS} from 'react-native-permissions';
+
 // function
 const MainScreen = ({ navigation }) => {
     const [refresh, setRefresh] = useState(false);
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [load, setload] = useState(false);
-
 
     try {
         async function fetchData() {
@@ -41,27 +43,41 @@ const MainScreen = ({ navigation }) => {
             "Error While Fetching From Database",
             "In case of error contact support\nWhatsapp : +923473766183",
             [
-              { text: "OK" }
+                { text: "OK" }
             ]
-          );
+        );
     }
 
     useEffect(() => {
         fetchData();
+
     }, [load])
 
-    if(refresh){
+    if (refresh) {
         fetchData();
     }
 
     const wait = (timeout) => {
         return new Promise(resolve => setTimeout(resolve, timeout));
-      }
+    }
 
     const onRefresh = useCallback(() => {
         setRefresh(true);
         wait(2000).then(() => setRefresh(false));
-      }, []);
+    }, []);
+
+
+    // BluetoothStateManager.getState().then((bluetoothState) => {
+    //     console.log(bluetoothState);
+    // });
+
+    // BluetoothStateManager.enable().then((result) => {
+    //     // do something...
+    // });
+
+    // BluetoothStateManager.disable().then((result) => {
+    //     // do something...
+    // });
 
     if (loading) {
         return (
@@ -99,7 +115,7 @@ const MainScreen = ({ navigation }) => {
                     </View>
                     <ScrollView
                         refreshControl={
-                            <RefreshControl 
+                            <RefreshControl
                                 refreshing={refresh}
                                 onRefresh={onRefresh}
                             />

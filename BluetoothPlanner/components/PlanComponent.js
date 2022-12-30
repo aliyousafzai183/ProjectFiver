@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, newDate } from 'react-native';
+import { View, Text, TouchableOpacity,Alert } from 'react-native';
 import { deleteDoc, doc, collection } from 'firebase/firestore/lite';
 import { db } from "../firebase/config"
 // importing styles from style
@@ -12,7 +12,13 @@ const Plan = ({ data, setload }) => {
             const ref = await deleteDoc(doc(db, "plans", item));
             setload(prev => !prev);
         } catch (err) {
-            console.log(err)
+            Alert.alert(
+                "No Internet!",
+                "Please Connect to the internet",
+                [
+                  { text: "OK" }
+                ]
+              );
         }
     }
 

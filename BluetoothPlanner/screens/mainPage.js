@@ -152,9 +152,6 @@ const MainScreen = ({ navigation }) => {
             </SafeAreaView>
         )
     }
-
-
-
 }
 
 export default MainScreen;

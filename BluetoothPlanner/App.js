@@ -14,7 +14,6 @@ const MainScreen = ({ navigation}) => {
 
 // AddPlan Screen
 const AddPlanScreen = ({ navigation}) => {
-
   return (
     <PlanPage navigation={navigation}/>
   )

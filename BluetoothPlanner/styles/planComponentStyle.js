@@ -1,39 +1,23 @@
 import { StyleSheet} from "react-native";
+import { moderateScale, verticalScale } from './Metrics'; 
 
 const styles = StyleSheet.create({
     mainWrapper:{
         display:'flex',
         flexDirection:'row',
-        height:50,
-        marginBottom:15,
+        height:verticalScale(50),
+        marginBottom:verticalScale(15),
         backgroundColor:'#3D49C7',
-        padding:10
-    },
-
-    wrapper1:{
-        width:10,
-    },
-    
-    wrapper2:{
-        width:120,
-    },
-
-    wrapper3:{
-        width:120,
-    },
-
-    wrapper4:{
-        width:60
+        padding:moderateScale(10),
+        justifyContent:'space-between'
     },
 
     cancel:{
-        fontSize:20,
-        textAlign:'center'
+        fontSize:moderateScale(20),
     },
 
     list:{
-        fontSize:20,
-        textAlign:'center'
+        fontSize:moderateScale(20),
     }
 })
 

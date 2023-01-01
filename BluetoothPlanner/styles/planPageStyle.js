@@ -1,51 +1,53 @@
 import { StyleSheet } from "react-native";
+import { horizontalScale, moderateScale, verticalScale } from './Metrics';
 
 const style = StyleSheet.create({
     wrapper1:{
         padding:10,
-        width:'75%',
-        height:'40%',
-        marginTop:'3%',
+        width:horizontalScale(300),
+        height:verticalScale(300),
         backgroundColor:'#436AC8',
         borderWidth:1,
         borderColor:'#295740',
+        display:'flex',
     },
 
     wrapper2:{
-        width:'65%',
-        height:'8%',
-        marginTop:'6%',
+        width:horizontalScale(230),
+        height:verticalScale(60),
         backgroundColor:'#436AC8',
     },
 
     heading1:{
-        fontSize:35,
+        fontSize:moderateScale(35),
         textAlign:'center',
         color:'#ffff',
-        padding:9,
+        padding:moderateScale(5),
         fontStyle:'italic'
     },
 
     tag:{
-        fontSize:20,
+        fontSize:moderateScale(20),
         color:'#ffff',
     },
 
     checkBoxWrapper: {
         flexDirection: 'row',
-        alignItems: 'center',
-        // paddingVertical: 5,
-        width:"50%",
-        marginTop:5
+        width:horizontalScale(100),
+        marginTop:moderateScale(2)
     },
 
     checkBoxMainWrapper:{
-        alignItems:'center'
+        alignItems:'center',
+        flexWrap:'wrap',
+        marginLeft:horizontalScale(70),
+        width:horizontalScale(200),
     },
 
     checkBoxText:{
-        fontSize:20,
-        fontStyle:'italic'
+        fontSize:moderateScale(20),
+        fontStyle:'italic',
+        padding:moderateScale(1)
     }
 
 })

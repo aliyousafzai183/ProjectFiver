@@ -6,7 +6,7 @@ import { db } from "../firebase/config"
 import styles from '../styles/planComponentStyle';
 
 // plan component
-const Plan = ({ data, setload }) => {
+const Plan = ({ data, setload, index}) => {
     const Delete = async (item) => {
         try {
             const ref = await deleteDoc(doc(db, "plans", item));
@@ -39,12 +39,11 @@ const Plan = ({ data, setload }) => {
             + ' ' + newformat;
         return formatted;
     }
-
     return (
         <View style={styles.mainWrapper} >
 
             <View style={styles.wrapper1}>
-                <Text style={styles.list}>1</Text>
+                <Text style={styles.list}>{index}</Text>
             </View>
 
             <View style={styles.wrapper2}>

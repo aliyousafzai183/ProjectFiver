@@ -1,12 +1,15 @@
 import * as React from 'react-native';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Text, TouchableOpacity, KeyboardAvoidingView, View, Alert } from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
-// import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
+
+// to pick time
 import DateTimePickerAndroid from 'react-native-date-picker';
+
 // importing styles from style
 import styles1 from '../styles/planPageStyle';
 import styles from "../styles/mainPageStyle";
+import { horizontalScale, verticalScale } from '../styles/Metrics';
 
 // db file
 import { addDoc, collection } from 'firebase/firestore/lite';
@@ -42,7 +45,7 @@ const planpage = ({ navigation }) => {
   const [check3, setCheck3] = useState(false);
   // save plan to db
   const addPlan = async () => {
-    if (check1 && check2) {
+    if (check1 && check2 && check3) {
       // code to add in db
       try {
         const docRef = await addDoc(collection(db, "plans"), {
@@ -64,7 +67,7 @@ const planpage = ({ navigation }) => {
         console.log(error);
       }
 
-    } else if (!check1 && check2) {
+    } else if (!check1 && check2 && check3) {
       Alert.alert(
         "Set Time-On",
         "Please set time on when to turn on the bluetooth automatically.",
@@ -72,7 +75,7 @@ const planpage = ({ navigation }) => {
           { text: "OK" }
         ]
       );
-    } else if (check1 && !check2) {
+    } else if (check1 && !check2 && check3) {
       Alert.alert(
         "Set Time-Off",
         "Please set time off when to turn off the bluetooth automatically.",
@@ -80,9 +83,17 @@ const planpage = ({ navigation }) => {
           { text: "OK" }
         ]
       );
+    } else if (check1 && check2 && !check3) {
+      Alert.alert(
+        "Set Repeating Days",
+        "Please select days to repeat on automatically.",
+        [
+          { text: "OK" }
+        ]
+      );
     } else {
       Alert.alert(
-        "Set Time On/Off",
+        "Set Time On/Off and Days repeat!!",
         "Please set time off and on when to turn on and off the bluetooth automatically.",
         [
           { text: "OK" }
@@ -119,11 +130,13 @@ const planpage = ({ navigation }) => {
           <View style={styles1.checkBoxWrapper}>
             <CheckBox
               value={days.monday}
-              onValueChange={value1 =>
+              onValueChange={value1 =>{
                 setDays({
                   ...days,
                   monday: value1,
-                })
+                });
+                setCheck3(true);
+              }
               }
             />
             <Text style={styles1.checkBoxText}>Monday</Text>
@@ -132,11 +145,13 @@ const planpage = ({ navigation }) => {
           <View style={styles1.checkBoxWrapper}>
             <CheckBox
               value={days.tuesday}
-              onValueChange={value1 =>
+              onValueChange={value1 => {
                 setDays({
                   ...days,
                   tuesday: value1,
-                })
+                });
+                setCheck3(true);
+              }
               }
             />
             <Text style={styles1.checkBoxText}>Tuesday</Text>
@@ -145,11 +160,13 @@ const planpage = ({ navigation }) => {
           <View style={styles1.checkBoxWrapper}>
             <CheckBox
               value={days.wednesday}
-              onValueChange={value1 =>
+              onValueChange={value1 => {
                 setDays({
                   ...days,
                   wednesday: value1,
-                })
+                });
+                setCheck3(true);
+              }
               }
             />
             <Text style={styles1.checkBoxText}>Wednesday</Text>
@@ -158,11 +175,13 @@ const planpage = ({ navigation }) => {
           <View style={styles1.checkBoxWrapper}>
             <CheckBox
               value={days.thursday}
-              onValueChange={value1 =>
+              onValueChange={value1 => {
                 setDays({
                   ...days,
                   thursday: value1,
-                })
+                });
+                setCheck3(true);
+              }
               }
             />
             <Text style={styles1.checkBoxText}>Thursday</Text>
@@ -171,11 +190,13 @@ const planpage = ({ navigation }) => {
           <View style={styles1.checkBoxWrapper}>
             <CheckBox
               value={days.friday}
-              onValueChange={value1 =>
+              onValueChange={value1 => {
                 setDays({
                   ...days,
                   friday: value1,
-                })
+                });
+                setCheck3(true);
+              }
               }
             />
             <Text style={styles1.checkBoxText}>Friday</Text>
@@ -184,11 +205,13 @@ const planpage = ({ navigation }) => {
           <View style={styles1.checkBoxWrapper}>
             <CheckBox
               value={days.saturday}
-              onValueChange={value1 =>
+              onValueChange={value1 => {
                 setDays({
                   ...days,
                   saturday: value1,
-                })
+                });
+                setCheck3(true);
+              }
               }
             />
             <Text style={styles1.checkBoxText}>Saturday</Text>
@@ -197,11 +220,13 @@ const planpage = ({ navigation }) => {
           <View style={styles1.checkBoxWrapper}>
             <CheckBox
               value={days.sunday}
-              onValueChange={value1 =>
+              onValueChange={value1 => {
                 setDays({
                   ...days,
                   sunday: value1,
-                })
+                });
+                setCheck3(true);
+              }
               }
             />
             <Text style={styles1.checkBoxText}>Sunday</Text>
@@ -213,8 +238,8 @@ const planpage = ({ navigation }) => {
       <View style={styles1.wrapper2}>
         <TouchableOpacity
           style={{
-            width: '100%',
-            height: '100%',
+            width:horizontalScale(230),
+            height:verticalScale(60),
             backgroundColor: '#436AC8',
             borderWidth: 1,
             borderColor: '#295740',

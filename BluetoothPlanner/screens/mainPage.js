@@ -1,6 +1,14 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { View, Text, ImageBackground, TouchableOpacity, SafeAreaView, RefreshControl, Alert } from 'react-native';
+import { View, Text, ImageBackground, TouchableOpacity, SafeAreaView, RefreshControl, Alert, LogBox } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
+
+//styles
+import { verticalScale } from '../styles/Metrics'; 
+
+
+// ignore unnecessay errors
+LogBox.ignoreLogs(['new NativeEventEmitter']);
+LogBox.ignoreAllLogs();
 
 // db file
 import { collection, getDocs } from 'firebase/firestore/lite';
@@ -17,11 +25,9 @@ import Plan from '../components/PlanComponent';
 import BluetoothStateManager from 'react-native-bluetooth-state-manager';
 // import {PERMISSIONS} from 'react-native-permissions';
 
-
 // background
 import BackgroundService from 'react-native-background-actions';
 const sleep = (time) => new Promise((resolve) => setTimeout(() => resolve(), time));
-
 
 // function
 const MainScreen = ({ navigation }) => {
@@ -72,11 +78,12 @@ const MainScreen = ({ navigation }) => {
         wait(2000).then(() => setRefresh(false));
     }, []);
 
+
     const veryIntensiveTask = async (taskDataArguments) => {
         // Example of an infinite loop task
         const { delay } = taskDataArguments;
         await new Promise(async (resolve) => {
-            for (let i = 0; BackgroundService.isRunning(); i++) {
+            for (; ;) {
 
                 // work
                 let Time = new Date();
@@ -84,7 +91,7 @@ const MainScreen = ({ navigation }) => {
                 let currentTime = Math.floor((Time.getTime() / 1000) / 60);
 
                 try {
-                    data?.map((item => {
+                    data?.map((async item => {
                         console.log("checking\n");
                         switch (currentDay) {
                             case 0:
@@ -94,14 +101,19 @@ const MainScreen = ({ navigation }) => {
                                     let endPlan = Math.floor(item.end.seconds / 60);
                                     if (startPlan == currentTime) {
                                         // enable bluetooth
-                                        BluetoothStateManager.enable().then((result) => {
-                                            console.log("Bluetooth Enabled.");
-                                        });
+                                        BluetoothStateManager.enable()
+                                            .then((result) => {
+                                                console.log(result);
+                                            })
+                                            .catch(err => console.log(err));
+
                                     } else if (endPlan == currentTime) {
                                         // disable bluetooth
-                                        BluetoothStateManager.disable().then((result) => {
-                                            console.log("Bluetooth disabled");
-                                        });
+                                        BluetoothStateManager.disable()
+                                            .then((result) => {
+                                                console.log(result);
+                                            })
+                                            .catch(err => console.log(err));
                                     } else {
                                         console.log("No plans to trigger that time");
                                     }
@@ -109,8 +121,8 @@ const MainScreen = ({ navigation }) => {
                                     console.log("No plans to run today");
                                 }
                                 break;
-                                
-                                case 1:
+
+                            case 1:
                                 console.log("checking monday\n");
                                 if (item.sunday) {
                                     let startPlan = Math.floor(item.start.seconds / 60);
@@ -131,10 +143,10 @@ const MainScreen = ({ navigation }) => {
                                 } else {
                                     console.log("No plans to run today");
                                 }
-                                
+
                                 break;
-                                
-                                case 2:
+
+                            case 2:
                                 console.log("checking tuesday\n");
                                 if (item.sunday) {
                                     let startPlan = Math.floor(item.start.seconds / 60);
@@ -155,10 +167,10 @@ const MainScreen = ({ navigation }) => {
                                 } else {
                                     console.log("No plans to run today");
                                 }
-                                
+
                                 break;
-                                
-                                case 3:
+
+                            case 3:
                                 console.log("checking wednesday\n");
                                 if (item.sunday) {
                                     let startPlan = Math.floor(item.start.seconds / 60);
@@ -179,10 +191,10 @@ const MainScreen = ({ navigation }) => {
                                 } else {
                                     console.log("No plans to run today");
                                 }
-                                
+
                                 break;
-                                
-                                case 4:
+
+                            case 4:
                                 console.log("checking thursday\n");
                                 if (item.sunday) {
                                     let startPlan = Math.floor(item.start.seconds / 60);
@@ -203,10 +215,10 @@ const MainScreen = ({ navigation }) => {
                                 } else {
                                     console.log("No plans to run today");
                                 }
-                                
+
                                 break;
-                                
-                                case 5:
+
+                            case 5:
                                 console.log("checking friday\n");
                                 if (item.sunday) {
                                     let startPlan = Math.floor(item.start.seconds / 60);
@@ -227,10 +239,10 @@ const MainScreen = ({ navigation }) => {
                                 } else {
                                     console.log("No plans to run today");
                                 }
-                                
+
                                 break;
-                                
-                                case 6:
+
+                            case 6:
                                 console.log("checking saturday\n");
                                 if (item.sunday) {
                                     let startPlan = Math.floor(item.start.seconds / 60);
@@ -256,7 +268,7 @@ const MainScreen = ({ navigation }) => {
                         }
                     }));
                     await BackgroundService.updateNotification({
-                        taskDesc: 'Bluetooth Planner is running to auto turn on and off bluetooth' + i
+                        taskDesc: 'Bluetooth Planner is running to auto turn on and off bluetooth'
                     });
                     await sleep(delay);
                 } catch (error) {
@@ -285,20 +297,13 @@ const MainScreen = ({ navigation }) => {
     const startBackgroundService = async () => {
         console.log("Background service started");
         await BackgroundService.start(veryIntensiveTask, options);
-        await BackgroundService.updateNotification({ taskDesc: 'Bluetooth Planner is running' }); // Only Android, iOS will ignore this call
+        await BackgroundService.updateNotification({ taskDesc: 'Bluetooth Planner is running' });
     }
 
-    const stopBackgroundService = async () => {
-        await BackgroundService.stop();
-    }
-
-
-    // BluetoothStateManager.getState().then((bluetoothState) => {
-    //     console.log(bluetoothState);
-    // });
-
-
-
+    // to stop background services
+    // const stopBackgroundService = async () => {
+    //     await BackgroundService.stop();
+    // }
 
 
     if (loading) {
@@ -320,17 +325,17 @@ const MainScreen = ({ navigation }) => {
                 <View style={styles.wrapper2}>
                     <View style={styles1.mainWrapper} >
 
-                        <View style={styles1.wrapper1}>
+                        <View>
                             <Text style={styles1.list}>#</Text>
                         </View>
-                        <View style={styles1.wrapper2}>
+                        <View>
                             <Text style={styles1.list}>Start-Time</Text>
                         </View>
-                        <View style={styles1.wrapper3}>
+                        <View>
                             <Text style={styles1.list}>End-Time</Text>
                         </View>
 
-                        <View style={styles1.wrapper4}>
+                        <View>
                             <Text style={styles1.list}>Del</Text>
                         </View>
 
@@ -348,11 +353,11 @@ const MainScreen = ({ navigation }) => {
                             paddingRight: 10
                         }}>
                         {
-                            data?.map((item => {
+                            data?.map(function (item, index) {
                                 return (
-                                    <Plan data={item} key={item.id} setload={setload} />
+                                    <Plan data={item} key={item.id} setload={setload} index={index+1}/>
                                 )
-                            }))
+                            })
                         }
                     </ScrollView>
 
@@ -360,14 +365,12 @@ const MainScreen = ({ navigation }) => {
 
                 <View style={styles.wrapper3}>
                     <TouchableOpacity style={{
-                        height: '38%',
+                        height: verticalScale(110),
                         backgroundColor: '#436AC8',
                         borderWidth: 1,
                         borderColor: '#295740',
-                        padding: 10
                     }}
                         onPress={() => navigation.navigate('planPage')}
-
                     ><Text style={styles.button}>+</Text></TouchableOpacity>
                 </View>
 

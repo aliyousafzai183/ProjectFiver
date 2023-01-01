@@ -1,55 +1,50 @@
 import { StyleSheet } from "react-native";
+import { horizontalScale, moderateScale, verticalScale } from './Metrics';
 
 const styles =StyleSheet.create({
     wrapper:{
         flex:1,
-        paddingTop:20,
-        borderColor:'black',
-        borderWidth:1,
         backgroundColor:'#3D49C7',
-        alignItems:'center'
+        alignItems:'center',
+        display:'flex',
+        flexDirection:'column',
+        justifyContent:'space-around'
     },
 
     wrapper1:{
-        width:'90%'
+        width: horizontalScale(300),
+        height: verticalScale(200),
+        display:'flex',
+        justifyContent:'flex-start'
     },
     
     wrapper2:{
-        width:'85%',
-        height:'55%',
-        marginTop:'10%',
+        width: horizontalScale(320),
+        height:verticalScale(450),
+        marginTop:verticalScale(15),
         backgroundColor:'#436AC8',
         borderWidth:1,
         borderColor:'#295740',
+        display:'flex',
+        justifyContent:'flex-start'
     },
     
     wrapper3:{
-        marginTop:'5%',
-        width:'70%'
+        marginTop:verticalScale(15),
+        width:horizontalScale(250)
     },
 
     heading1:{
-        fontSize:70,
+        fontSize:moderateScale(68),
         textAlign:'center',
         color:'#ffff'
     },
 
     button:{
-        fontSize:60,
-        width:'100%',
-        height:'100%',
+        fontSize:moderateScale(65),
         textAlign:'center',
         color:'#ffff',
     },
-
-    scroll:{
-        paddingTop:3,
-        paddingLeft:2,
-        paddingRight:10
-    },
-
-
-
 })
 
 export default styles;

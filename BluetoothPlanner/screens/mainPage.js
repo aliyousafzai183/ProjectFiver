@@ -14,8 +14,14 @@ import styles1 from '../styles/planComponentStyle';
 import Plan from '../components/PlanComponent';
 
 // bluetooth
-// import BluetoothStateManager from 'react-native-bluetooth-state-manager';
+import BluetoothStateManager from 'react-native-bluetooth-state-manager';
 // import {PERMISSIONS} from 'react-native-permissions';
+
+
+// background
+import BackgroundService from 'react-native-background-actions';
+const sleep = (time) => new Promise((resolve) => setTimeout(() => resolve(), time));
+
 
 // function
 const MainScreen = ({ navigation }) => {
@@ -50,7 +56,7 @@ const MainScreen = ({ navigation }) => {
 
     useEffect(() => {
         fetchData();
-
+        startBackgroundService();
     }, [load])
 
     if (refresh) {
@@ -66,18 +72,234 @@ const MainScreen = ({ navigation }) => {
         wait(2000).then(() => setRefresh(false));
     }, []);
 
+    const veryIntensiveTask = async (taskDataArguments) => {
+        // Example of an infinite loop task
+        const { delay } = taskDataArguments;
+        await new Promise(async (resolve) => {
+            for (let i = 0; BackgroundService.isRunning(); i++) {
+
+                // work
+                let Time = new Date();
+                let currentDay = Time.getDay();
+                let currentTime = Math.floor((Time.getTime() / 1000) / 60);
+
+                try {
+                    data?.map((item => {
+                        console.log("checking\n");
+                        switch (currentDay) {
+                            case 0:
+                                console.log("checking sunday\n");
+                                if (item.sunday) {
+                                    let startPlan = Math.floor(item.start.seconds / 60);
+                                    let endPlan = Math.floor(item.end.seconds / 60);
+                                    if (startPlan == currentTime) {
+                                        // enable bluetooth
+                                        BluetoothStateManager.enable().then((result) => {
+                                            console.log("Bluetooth Enabled.");
+                                        });
+                                    } else if (endPlan == currentTime) {
+                                        // disable bluetooth
+                                        BluetoothStateManager.disable().then((result) => {
+                                            console.log("Bluetooth disabled");
+                                        });
+                                    } else {
+                                        console.log("No plans to trigger that time");
+                                    }
+                                } else {
+                                    console.log("No plans to run today");
+                                }
+                                break;
+                                
+                                case 1:
+                                console.log("checking monday\n");
+                                if (item.sunday) {
+                                    let startPlan = Math.floor(item.start.seconds / 60);
+                                    let endPlan = Math.floor(item.end.seconds / 60);
+                                    if (startPlan == currentTime) {
+                                        // enable bluetooth
+                                        BluetoothStateManager.enable().then((result) => {
+                                            console.log("Bluetooth Enabled.");
+                                        });
+                                    } else if (endPlan == currentTime) {
+                                        // disable bluetooth
+                                        BluetoothStateManager.disable().then((result) => {
+                                            console.log("Bluetooth disabled");
+                                        });
+                                    } else {
+                                        console.log("No plans to trigger that time");
+                                    }
+                                } else {
+                                    console.log("No plans to run today");
+                                }
+                                
+                                break;
+                                
+                                case 2:
+                                console.log("checking tuesday\n");
+                                if (item.sunday) {
+                                    let startPlan = Math.floor(item.start.seconds / 60);
+                                    let endPlan = Math.floor(item.end.seconds / 60);
+                                    if (startPlan == currentTime) {
+                                        // enable bluetooth
+                                        BluetoothStateManager.enable().then((result) => {
+                                            console.log("Bluetooth Enabled.");
+                                        });
+                                    } else if (endPlan == currentTime) {
+                                        // disable bluetooth
+                                        BluetoothStateManager.disable().then((result) => {
+                                            console.log("Bluetooth disabled");
+                                        });
+                                    } else {
+                                        console.log("No plans to trigger that time");
+                                    }
+                                } else {
+                                    console.log("No plans to run today");
+                                }
+                                
+                                break;
+                                
+                                case 3:
+                                console.log("checking wednesday\n");
+                                if (item.sunday) {
+                                    let startPlan = Math.floor(item.start.seconds / 60);
+                                    let endPlan = Math.floor(item.end.seconds / 60);
+                                    if (startPlan == currentTime) {
+                                        // enable bluetooth
+                                        BluetoothStateManager.enable().then((result) => {
+                                            console.log("Bluetooth Enabled.");
+                                        });
+                                    } else if (endPlan == currentTime) {
+                                        // disable bluetooth
+                                        BluetoothStateManager.disable().then((result) => {
+                                            console.log("Bluetooth disabled");
+                                        });
+                                    } else {
+                                        console.log("No plans to trigger that time");
+                                    }
+                                } else {
+                                    console.log("No plans to run today");
+                                }
+                                
+                                break;
+                                
+                                case 4:
+                                console.log("checking thursday\n");
+                                if (item.sunday) {
+                                    let startPlan = Math.floor(item.start.seconds / 60);
+                                    let endPlan = Math.floor(item.end.seconds / 60);
+                                    if (startPlan == currentTime) {
+                                        // enable bluetooth
+                                        BluetoothStateManager.enable().then((result) => {
+                                            console.log("Bluetooth Enabled.");
+                                        });
+                                    } else if (endPlan == currentTime) {
+                                        // disable bluetooth
+                                        BluetoothStateManager.disable().then((result) => {
+                                            console.log("Bluetooth disabled");
+                                        });
+                                    } else {
+                                        console.log("No plans to trigger that time");
+                                    }
+                                } else {
+                                    console.log("No plans to run today");
+                                }
+                                
+                                break;
+                                
+                                case 5:
+                                console.log("checking friday\n");
+                                if (item.sunday) {
+                                    let startPlan = Math.floor(item.start.seconds / 60);
+                                    let endPlan = Math.floor(item.end.seconds / 60);
+                                    if (startPlan == currentTime) {
+                                        // enable bluetooth
+                                        BluetoothStateManager.enable().then((result) => {
+                                            console.log("Bluetooth Enabled.");
+                                        });
+                                    } else if (endPlan == currentTime) {
+                                        // disable bluetooth
+                                        BluetoothStateManager.disable().then((result) => {
+                                            console.log("Bluetooth disabled");
+                                        });
+                                    } else {
+                                        console.log("No plans to trigger that time");
+                                    }
+                                } else {
+                                    console.log("No plans to run today");
+                                }
+                                
+                                break;
+                                
+                                case 6:
+                                console.log("checking saturday\n");
+                                if (item.sunday) {
+                                    let startPlan = Math.floor(item.start.seconds / 60);
+                                    let endPlan = Math.floor(item.end.seconds / 60);
+                                    if (startPlan == currentTime) {
+                                        // enable bluetooth
+                                        BluetoothStateManager.enable().then((result) => {
+                                            console.log("Bluetooth Enabled.");
+                                        });
+                                    } else if (endPlan == currentTime) {
+                                        // disable bluetooth
+                                        BluetoothStateManager.disable().then((result) => {
+                                            console.log("Bluetooth disabled");
+                                        });
+                                    } else {
+                                        console.log("No plans to trigger that time");
+                                    }
+                                } else {
+                                    console.log("No plans to run today");
+                                }
+
+                                break;
+                        }
+                    }));
+                    await BackgroundService.updateNotification({
+                        taskDesc: 'Bluetooth Planner is running to auto turn on and off bluetooth' + i
+                    });
+                    await sleep(delay);
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+        });
+    };
+
+    const options = {
+        taskName: 'Bluetooth Planner',
+        taskTitle: 'Bluetooth Planner is running in background',
+        taskDesc: 'Bluetooth Planner is running in the background to check whether the plan time is near or not!',
+        taskIcon: {
+            name: 'ic_launcher',
+            type: 'mipmap',
+        },
+        color: '#ff00ff',
+        linkingURI: 'yourSchemeHere://chat/jane', // See Deep Linking for more info
+        parameters: {
+            delay: 15000,
+        },
+    };
+
+    // background
+    const startBackgroundService = async () => {
+        console.log("Background service started");
+        await BackgroundService.start(veryIntensiveTask, options);
+        await BackgroundService.updateNotification({ taskDesc: 'Bluetooth Planner is running' }); // Only Android, iOS will ignore this call
+    }
+
+    const stopBackgroundService = async () => {
+        await BackgroundService.stop();
+    }
+
 
     // BluetoothStateManager.getState().then((bluetoothState) => {
     //     console.log(bluetoothState);
     // });
 
-    // BluetoothStateManager.enable().then((result) => {
-    //     // do something...
-    // });
 
-    // BluetoothStateManager.disable().then((result) => {
-    //     // do something...
-    // });
+
+
 
     if (loading) {
         return (
@@ -152,6 +374,9 @@ const MainScreen = ({ navigation }) => {
             </SafeAreaView>
         )
     }
+
+
+
 }
 
 export default MainScreen;

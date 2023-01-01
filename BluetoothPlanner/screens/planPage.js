@@ -2,8 +2,8 @@ import * as React from 'react-native';
 import { useState, useEffect } from 'react';
 import { Text, TouchableOpacity, KeyboardAvoidingView, View, Alert } from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
+// import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import DateTimePickerAndroid from 'react-native-date-picker';
-
 // importing styles from style
 import styles1 from '../styles/planPageStyle';
 import styles from "../styles/mainPageStyle";
@@ -40,10 +40,6 @@ const planpage = ({ navigation }) => {
   const [check1, setCheck1] = useState(false);
   const [check2, setCheck2] = useState(false);
   const [check3, setCheck3] = useState(false);
-
-  let one = false;
-  let two = false;
-
   // save plan to db
   const addPlan = async () => {
     if (check1 && check2) {

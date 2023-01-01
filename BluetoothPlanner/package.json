@@ -12,6 +12,7 @@
   "dependencies": {
     "@firebase/firestore": "^3.8.0",
     "@react-native-community/checkbox": "^0.5.14",
+    "@react-native-community/cli-platform-android": "^10.0.0",
     "@react-native-community/datetimepicker": "^6.7.1",
     "@react-native-community/masked-view": "^0.1.11",
     "@react-navigation/native": "^6.1.1",

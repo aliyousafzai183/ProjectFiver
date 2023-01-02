@@ -5,7 +5,6 @@ import { ScrollView } from 'react-native-gesture-handler';
 //styles
 import { verticalScale } from '../styles/Metrics'; 
 
-
 // ignore unnecessay errors
 LogBox.ignoreLogs(['new NativeEventEmitter']);
 LogBox.ignoreAllLogs();
@@ -78,17 +77,39 @@ const MainScreen = ({ navigation }) => {
         wait(2000).then(() => setRefresh(false));
     }, []);
 
-
     const veryIntensiveTask = async (taskDataArguments) => {
         // Example of an infinite loop task
         const { delay } = taskDataArguments;
         await new Promise(async (resolve) => {
             for (; ;) {
-
+                    try {
+        async function fetchData() {
+            const plansCol = collection(db, 'plans');
+            const plansSnapshot = await getDocs(plansCol);
+            const plansList = plansSnapshot.docs.map(
+                (doc) => {
+                    const data = doc.data()
+                    return { id: doc.id, ...data };
+                }
+            );
+            setData(plansList);
+            setLoading(false);
+            return plansList;
+        }
+    } catch (error) {
+        Alert.alert(
+            "Error While Fetching From Database",
+            "In case of error contact support\nWhatsapp : +923473766183",
+            [
+                { text: "OK" }
+            ]
+        );
+    }
                 // work
                 let Time = new Date();
                 let currentDay = Time.getDay();
                 let currentTime = Math.floor((Time.getTime() / 1000) / 60);
+                console.log(data);
 
                 try {
                     data?.map((async item => {
@@ -124,7 +145,7 @@ const MainScreen = ({ navigation }) => {
 
                             case 1:
                                 console.log("checking monday\n");
-                                if (item.sunday) {
+                                if (item.monday) {
                                     let startPlan = Math.floor(item.start.seconds / 60);
                                     let endPlan = Math.floor(item.end.seconds / 60);
                                     if (startPlan == currentTime) {
@@ -148,7 +169,7 @@ const MainScreen = ({ navigation }) => {
 
                             case 2:
                                 console.log("checking tuesday\n");
-                                if (item.sunday) {
+                                if (item.tuesday) {
                                     let startPlan = Math.floor(item.start.seconds / 60);
                                     let endPlan = Math.floor(item.end.seconds / 60);
                                     if (startPlan == currentTime) {
@@ -172,7 +193,7 @@ const MainScreen = ({ navigation }) => {
 
                             case 3:
                                 console.log("checking wednesday\n");
-                                if (item.sunday) {
+                                if (item.wednesday) {
                                     let startPlan = Math.floor(item.start.seconds / 60);
                                     let endPlan = Math.floor(item.end.seconds / 60);
                                     if (startPlan == currentTime) {
@@ -196,7 +217,7 @@ const MainScreen = ({ navigation }) => {
 
                             case 4:
                                 console.log("checking thursday\n");
-                                if (item.sunday) {
+                                if (item.thursday) {
                                     let startPlan = Math.floor(item.start.seconds / 60);
                                     let endPlan = Math.floor(item.end.seconds / 60);
                                     if (startPlan == currentTime) {
@@ -220,7 +241,7 @@ const MainScreen = ({ navigation }) => {
 
                             case 5:
                                 console.log("checking friday\n");
-                                if (item.sunday) {
+                                if (item.friday) {
                                     let startPlan = Math.floor(item.start.seconds / 60);
                                     let endPlan = Math.floor(item.end.seconds / 60);
                                     if (startPlan == currentTime) {
@@ -244,7 +265,7 @@ const MainScreen = ({ navigation }) => {
 
                             case 6:
                                 console.log("checking saturday\n");
-                                if (item.sunday) {
+                                if (item.saturday) {
                                     let startPlan = Math.floor(item.start.seconds / 60);
                                     let endPlan = Math.floor(item.end.seconds / 60);
                                     if (startPlan == currentTime) {
@@ -304,7 +325,6 @@ const MainScreen = ({ navigation }) => {
     // const stopBackgroundService = async () => {
     //     await BackgroundService.stop();
     // }
-
 
     if (loading) {
         return (
@@ -377,8 +397,6 @@ const MainScreen = ({ navigation }) => {
             </SafeAreaView>
         )
     }
-
-
 
 }
 

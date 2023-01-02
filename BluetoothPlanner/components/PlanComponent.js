@@ -11,6 +11,7 @@ const Plan = ({ data, setload, index}) => {
         try {
             const ref = await deleteDoc(doc(db, "plans", item));
             setload(prev => !prev);
+
         } catch (err) {
             Alert.alert(
                 "No Internet!",

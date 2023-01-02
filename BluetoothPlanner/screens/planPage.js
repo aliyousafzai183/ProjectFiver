@@ -64,7 +64,13 @@ const planpage = ({ navigation }) => {
         setCheck2(false);
         setCheck3(false);
       } catch (error) {
-        console.log(error);
+        Alert.alert(
+          "No Internet!",
+          "Try connecting to the internet first!",
+          [
+            { text: "OK" }
+          ]
+        );
       }
 
     } else if (!check1 && check2 && check3) {

@@ -15,7 +15,7 @@ const Plan = ({ data, setload, index}) => {
         } catch (err) {
             Alert.alert(
                 "No Internet!",
-                "Please Connect to the internet",
+                "Try connecting to the internet first!",
                 [
                   { text: "OK" }
                 ]
